@@ -1,3 +1,4 @@
+# To gather the class schedules
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -10,8 +11,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium.common.exceptions import WebDriverException
 
-# Get the directory for the python file
-parent_dir = __file__.replace("s2c.py", "")
+# To create the ics calendar file
+from icalendar import Calendar, Event
+import os
+from pathlib import Path
+from datetime import datetime
+
+# Information parsing
+import re
 
 # Open the old UPRM portal with selenium
 browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
@@ -23,11 +30,53 @@ WebDriverWait(browser, 600).until(EC.url_contains("home.php"))
 assert "My Home" in browser.title
 
 # Direct the user into the schedule page
-browser.find_element(by=By.XPATH,value='//*[@title="Services for Students"]').click()
+browser.find_element(by=By.XPATH, value='//*[@title="Services for Students"]').click()
 assert "Estudiantes" in browser.title
 
-browser.find_element(by=By.XPATH,value='//*[@title="Matricula"]').click()
+browser.find_element(by=By.XPATH, value='//*[@title="Matricula"]').click()
 assert "Matrícula" in browser.title
 
-browser.find_element(by=By.CSS_SELECTOR,value="a[href*='matricula/appviewmtr.php']").click()
+browser.find_element(by=By.CSS_SELECTOR, value="a[href*='matricula/appviewmtr.php']").click()
 assert "Clases Matriculadas" in browser.title
+
+# Make a list of all the classes
+class_elements = browser.find_elements(by=By.CLASS_NAME, value="even")
+class_elements += browser.find_elements(by=By.CLASS_NAME, value="odd")
+
+class_list = []
+for element in class_elements:
+    class_list.append(element.text)
+
+# Create .ics file, filter each item in the class list and add it as an event to the ics file
+parent_dir = str(Path(__file__).parent) + "/"
+cal = Calendar()
+
+    # Iterate through the list of classes and create events lasting 17 weeks for each class on their corresponding days
+for c in class_list:
+    try:
+        # Parse information
+        name = re.search(r"[A-Z]{4}\d{4}", c).group()
+
+        section = re.search(r"\s\d{3}\s", c).group()
+        section = section.strip()
+
+        room = re.search(r"[A-Z]+[ ]\d+[A-Z]*", c).group()
+        room = room.replace(" ", "")
+
+        days = re.search(r"\s\s[J-W]{1,5}\s\s", c).group()
+        days = days.strip()
+
+        time = re.findall(r"\d+:\d+\s\w+", c)
+        s_time = time[0]
+        e_time = time[1]
+
+        course = Event()
+        course.add('location', value=room)
+
+        cal.add(course)
+
+    except AttributeError:
+        # FIXME: this error handling sucks
+        name = "Generic class name"
+
+# TODO: Remove web driver cache so that this script works cleanly without leaving temporary residue files
