@@ -122,8 +122,8 @@ for c in class_list:
         days = days.strip()
 
         time = re.findall(r"\d+:\d+\s\w+", c)
-        s_time = datetime.strptime(time[0], "%I:%M %p")
-        e_time = datetime.strptime(time[1], "%I:%M %p")
+        s_time = datetime.strptime(time[0], "%I:%M %p").replace(day=datetime.now().day, year=datetime.now().year, month=datetime.now().month)
+        e_time = datetime.strptime(time[1], "%I:%M %p").replace(day=datetime.now().day, year=datetime.now().year, month=datetime.now().month)
 
         course = Event()
         course.add("summary", name + "-" + section)
