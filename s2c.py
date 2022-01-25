@@ -140,13 +140,12 @@ for c in class_list:
         course.add("transp", "OPAQUE")
 
         course.add("dtstamp", datetime.now())
-        
+
         cal.add_component(course)
         uid += 1
 
-    except AttributeError:
-        # FIXME: this error handling sucks
-        name = "Generic class name"
+    except AttributeError as e:
+        print("One of the attributes was not found. More details: " + e)
 
 cal_file = open(os.path.join(parent_dir, "class_schedule.ics"), "wb")
 cal_file.write(cal.to_ical())
