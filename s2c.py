@@ -75,8 +75,6 @@ class_list = []
 for element in class_elements:
     class_list.append(element.text)
 
-browser.quit()
-
 # Create .ics file, filter each item in the class list and add it as an event to the ics file
 parent_dir = str(Path(__file__).parent) + "/"
 # Time the class starts and ends
@@ -151,4 +149,4 @@ cal_file = open(os.path.join(parent_dir, "class_schedule.ics"), "wb")
 cal_file.write(cal.to_ical())
 cal_file.close()
 
-# TODO: Remove web driver cache so that this script works cleanly without leaving temporary residue files
+browser.quit()
