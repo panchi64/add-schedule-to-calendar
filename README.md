@@ -1,8 +1,8 @@
 # About
-This script uses Selenium in order to scrape the UPRM portal website and generate an `.ics` file containing the class schedule parsed from the page. This file can be imported to any calendar application and add all the classes in a recurring manner. 
+This script uses Selenium in order to scrape the UPRM portal website and generate an `.ics` file containing class' schedules. This file can be imported to any calendar application. 
 
 *NOTE*
-The application does not gather or store any information other than the courses found, your login information is relatively safe.
+The application does not gather or store any information other than the courses found, your log-in information is never touched and relatively safe.
 
 (The courses are removed from memory once the application closes, feel free to look at the source code :D)
 
