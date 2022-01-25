@@ -14,6 +14,7 @@ from selenium.common.exceptions import WebDriverException
 # To create and hydrate the ics calendar file
 import pytz
 import os
+import icalendar
 from icalendar import Calendar, Event
 from pathlib import Path
 from datetime import datetime, timedelta
@@ -84,6 +85,21 @@ pr_tz = pytz.timezone("America/Puerto_Rico")
 cal = Calendar()
 cal.add("version", "2.0")
 cal.add("prodid", "Francisco Casiano's GitHub Script")
+cal.add("calscale", "gregorian")
+
+# Setup timezone details for the calendar... For some reason this isn't easily done with the library???
+tzc = icalendar.Timezone()
+tzc.add('tzid', 'America/Puerto_Rico')
+tzc.add('x-lic-location', 'America/Puerto_Rico')
+
+tzs = icalendar.TimezoneStandard()
+tzs.add('TZOFFSETFROM', timedelta(hours=-4))
+tzs.add('TZOFFSETTO', timedelta(hours=-4))
+tzs.add('tzname', "AST")
+tzs.add('dtstart', datetime(1970, 1, 1, 0, 0, 0))
+
+tzc.add_component(tzs)
+cal.add_component(tzc)
 
     # Iterate through the list of classes and create events lasting a semester (17 weeks) for each class on their corresponding days
 
