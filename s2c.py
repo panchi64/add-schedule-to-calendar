@@ -84,7 +84,7 @@ pr_tz = pytz.timezone("America/Puerto_Rico")
 
 cal = Calendar()
 cal.add("version", "2.0")
-cal.add("prodid", "Francisco Casiano's GitHub Script")
+cal.add("prodid", "Francisco-Casiano")
 cal.add("calscale", "gregorian")
 
 # Setup timezone details for the calendar... For some reason this isn't easily done with the library???
@@ -140,8 +140,7 @@ for c in class_list:
         course.add("transp", "OPAQUE")
 
         course.add("dtstamp", datetime.now())
-        course.add("uid", uid)
-
+        
         cal.add_component(course)
         uid += 1
 
